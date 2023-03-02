@@ -2,12 +2,6 @@ const { NotFound } = require("http-errors");
 const Joi = require("joi");
 const { nanoid } = require("nanoid");
 
-const contactsSchema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().required(),
-  phone: Joi.string().required(),
-});
-
 const {
   listContacts,
   getContactById,
@@ -15,6 +9,18 @@ const {
   addContact,
   updateContact,
 } = require("../models/contacts");
+
+const contactsSchema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().required(),
+  phone: Joi.string().required(),
+});
+
+const contactPutShema = Joi.object({
+  name: Joi.string(),
+  email: Joi.string(),
+  phone: Joi.string(),
+});
 
 const allContacts = async (req, res, next) => {
   try {
@@ -70,19 +76,13 @@ const add = async (req, res, next) => {
 
 const contactUpdateById = async (req, res, next) => {
   try {
-    const { contactId } = req.params;
-    if (Object.keys(req.body).length === 0) {
-      const error = new Error("missing fields");
-      error.status = 400;
-      throw error;
-    }
-
-    const { error } = contactsSchema.validate(req.body);
+    const { error } = contactPutShema.validate(req.body);
     if (error) {
       error.status = 400;
       throw error;
     }
 
+    const { contactId } = req.params;
     const result = await updateContact(contactId, req.body);
     if (!result) {
       throw new NotFound(`Product with id=${contactId} not found`);
