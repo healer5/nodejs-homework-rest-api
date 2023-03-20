@@ -17,7 +17,8 @@ const allContacts = async (req, res) => {
 
 const contactById = async (req, res) => {
   const { id } = req.params;
-  const result = await Contact.findById(id);
+  const { _id: userId } = req.user;
+  const result = await Contact.findOne({ _id: id, owner: userId });
   if (!result) {
     throw HttpError(404, `Product with id=${id} not found`);
   }
@@ -32,9 +33,14 @@ const add = async (req, res) => {
 
 const contactUpdateById = async (req, res) => {
   const { id } = req.params;
-  const result = await Contact.findByIdAndUpdate(id, req.body, {
-    new: true,
-  });
+  const { _id: userId } = req.user;
+  const result = await Contact.findByIdAndUpdate(
+    { _id: id, owner: userId },
+    req.body,
+    {
+      new: true,
+    }
+  );
   if (!result) {
     throw HttpError(404, `Product with id=${id} not found`);
   }
@@ -43,9 +49,14 @@ const contactUpdateById = async (req, res) => {
 
 const contactUpdateFavorite = async (req, res) => {
   const { id } = req.params;
-  const result = await Contact.findByIdAndUpdate(id, req.body, {
-    new: true,
-  });
+  const { _id: userId } = req.user;
+  const result = await Contact.findByIdAndUpdate(
+    { _id: id, owner: userId },
+    req.body,
+    {
+      new: true,
+    }
+  );
   if (!result) {
     throw HttpError(404, `Product with id=${id} not found`);
   }
@@ -54,7 +65,11 @@ const contactUpdateFavorite = async (req, res) => {
 
 const deleteContact = async (req, res) => {
   const { id } = req.params;
-  const result = await Contact.findByIdAndRemove(id);
+  const { _id: userId } = req.user;
+  const result = await Contact.findByIdAndRemove({
+    _id: id,
+    owner: userId,
+  });
   if (!result) {
     throw HttpError(404, `Product with id=${id} not found`);
   }
