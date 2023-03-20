@@ -5,6 +5,8 @@ const { schemas } = require("../../models/contact");
 const { validateBody, isValidId, authenticate } = require("../../middlewares");
 
 const router = express.Router();
+const { schemas } = require("../../models/contact");
+const { validateBody, isValidId } = require("../../middlewares");
 
 router.get("/", authenticate, ctrl.allContacts);
 
