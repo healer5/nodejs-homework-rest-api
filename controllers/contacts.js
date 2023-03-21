@@ -51,7 +51,7 @@ const contactUpdateById = async (req, res) => {
 const contactUpdateFavorite = async (req, res) => {
   const { id } = req.params;
   const { _id: userId } = req.user;
-  const result = await Contact.findByIdAndUpdate(
+  const result = await Contact.findOneAndUpdate(
     { _id: id, owner: userId },
     req.body,
     {
@@ -67,7 +67,7 @@ const contactUpdateFavorite = async (req, res) => {
 const deleteContact = async (req, res) => {
   const { id } = req.params;
   const { _id: userId } = req.user;
-  const result = await Contact.findByIdAndRemove({
+  const result = await Contact.findOneAndRemove({
     _id: id,
     owner: userId,
   });
