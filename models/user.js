@@ -29,7 +29,7 @@ const userSchema = new Schema(
     },
     verificationCode: {
       type: String,
-      default: "",
+      required: [true, "Verify token is required"],
     },
     token: String,
   },
@@ -45,7 +45,7 @@ const registerSchema = Joi.object({
 });
 
 const emailSchema = Joi.object({
-  email: Joi.string().pattern().required(),
+  email: Joi.string().required(),
 });
 
 const loginSchema = Joi.object({
